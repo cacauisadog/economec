@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 
 function App() {
@@ -6,7 +7,7 @@ function App() {
   return (
     <>
       <h1 className="text-2xl text-green-200">Economec</h1>
-      <button onClick={() => setCount(prev => prev + 1)}>Clicked {count} times</button>
+      <Button onClick={() => setCount(prev => prev + 1)}>Clicked {count} times</Button>
     </>
   )
 }
