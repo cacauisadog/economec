@@ -1,3 +1,4 @@
+import AddNewTransactionForm from "@/components/add-new-transaction-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,8 +25,9 @@ export default function AddNewTransactionDialog({
         <DialogHeader>
           <DialogTitle>Nova transação</DialogTitle>
           <DialogDescription>
-            Insira os dados da sua transação. Clique em Adicionar ao finalizar.
+            Insira os dados da sua transação.
           </DialogDescription>
+          <AddNewTransactionForm className="py-4" />
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
