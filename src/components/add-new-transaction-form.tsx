@@ -1,5 +1,13 @@
 import { Button } from "@/components/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   Form,
   FormControl,
   FormField,
@@ -9,12 +17,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+
+const categories = [
+  { value: "restaurante", label: "restaurante" },
+  { value: "supermercado", label: "supermercado" },
+  { value: "delivery", label: "delivery" },
+  { value: "carro", label: "carro" },
+];
 
 const formSchema = z.object({
   type: z.enum(["expense", "income"]),
@@ -25,8 +46,9 @@ const formSchema = z.object({
     .regex(/^\d+(\.\d{1,2})?$/, "Formato inválido"),
   description: z
     .string()
-    .min(3, { message: "Pelo menos 2" })
+    .min(3, { message: "Pelo menos 3" })
     .max(512, { message: "Máx 512 chars" }),
+  category: z.string(),
 });
 
 // Format cents value to currency display (e.g., 560 -> "R$ 5,60")
@@ -55,6 +77,9 @@ export default function AddNewTransactionForm({
   className?: string;
 }) {
   const [displayValue, setDisplayValue] = useState("R$ 0,00");
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [possibleCategories, setPossibleCategories] = useState(categories);
+  const [categoryValue, setCategoryValue] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -144,6 +169,65 @@ export default function AddNewTransactionForm({
               <FormMessage />
             </FormItem>
           )}
+        />
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => {
+            const selectedCategory = possibleCategories.find(
+              (category) => category.value === field.value,
+            );
+
+            return (
+              <FormItem>
+                <FormLabel>Categoria</FormLabel>
+                <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={categoryOpen}
+                      >
+                        {selectedCategory?.label || "Seleciona uma categoria"}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent portal={false}>
+                    <Command>
+                      <CommandInput placeholder="pesquisae" />
+                      <CommandList>
+                        <CommandEmpty>Achei nada não</CommandEmpty>
+                        <CommandGroup>
+                          {possibleCategories.map((category) => (
+                            <CommandItem
+                              value={category.label}
+                              key={category.value}
+                              onSelect={() => {
+                                form.setValue("category", category.value);
+                                setCategoryOpen(false);
+                              }}
+                            >
+                              {category.label}
+                              <Check
+                                className={cn(
+                                  "ml-auto h-4 w-4",
+                                  category.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </FormItem>
+            );
+          }}
         />
         <Button type="submit">Submit</Button>
       </form>
