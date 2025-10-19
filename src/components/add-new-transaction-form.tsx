@@ -25,7 +25,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -41,14 +41,18 @@ const formSchema = z.object({
   type: z.enum(["expense", "income"]),
   value: z
     .string()
-    .min(3)
-    .max(11, { message: "Você realmente transacionou algo na casa do bilhão?" })
-    .regex(/^\d+(\.\d{1,2})?$/, "Formato inválido"),
+    .regex(/^\d+(\.\d{1,2})?$/, "Formato inválido")
+    .refine((val) => parseFloat(val) >= 0.01, {
+      message: "O valor deve ser maior que R$ 0,00",
+    })
+    .refine((val) => parseFloat(val) <= 999999999.99, {
+      message: "Você realmente transacionou algo na casa do bilhão?",
+    }),
   description: z
     .string()
     .min(3, { message: "Pelo menos 3" })
     .max(512, { message: "Máx 512 chars" }),
-  category: z.string(),
+  category: z.string().min(1, { message: "Selecione uma categoria" }),
 });
 
 // Format cents value to currency display (e.g., 560 -> "R$ 5,60")
@@ -87,6 +91,7 @@ export default function AddNewTransactionForm({
       type: "expense",
       value: "0.00",
       description: "",
+      category: "",
     },
   });
 
@@ -99,6 +104,18 @@ export default function AddNewTransactionForm({
       ...values,
       value: finalValue,
     });
+  }
+
+  function addNewCategory() {
+    const newCategory = {
+      value: categoryValue,
+      label: categoryValue,
+    };
+    setPossibleCategories((prev) => [...prev, newCategory]);
+    form.setValue("category", categoryValue, {
+      shouldValidate: true,
+    });
+    setCategoryOpen(false);
   }
 
   return (
@@ -142,6 +159,7 @@ export default function AddNewTransactionForm({
                 <Input
                   type="tel"
                   value={displayValue}
+                  maxLength={15}
                   onChange={(e) => {
                     const cents = parseInputToCents(e.target.value);
                     const formatted = formatCurrency(cents);
@@ -189,23 +207,51 @@ export default function AddNewTransactionForm({
                         role="combobox"
                         aria-expanded={categoryOpen}
                       >
-                        {selectedCategory?.label || "Seleciona uma categoria"}
-                        <ChevronsUpDown className="opacity-50" />
+                        {selectedCategory?.label || "Selecione uma categoria"}
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent portal={false}>
-                    <Command>
-                      <CommandInput placeholder="pesquisae" />
+                  <PopoverContent portal={false} className="w-full p-0">
+                    <Command className="w-full">
+                      <CommandInput
+                        placeholder="Digite algo"
+                        value={categoryValue}
+                        onValueChange={setCategoryValue}
+                        maxLength={24}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            const hasMatch = possibleCategories.some((cat) =>
+                              cat.label
+                                .toLowerCase()
+                                .includes(categoryValue.toLowerCase()),
+                            );
+                            if (!hasMatch && categoryValue.trim()) {
+                              e.preventDefault();
+                              addNewCategory();
+                            }
+                          }
+                        }}
+                      />
                       <CommandList>
-                        <CommandEmpty>Achei nada não</CommandEmpty>
+                        <CommandEmpty className="w-full p-4">
+                          <Button
+                            variant="ghost"
+                            className="w-full"
+                            onClick={addNewCategory}
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Adicionar "{categoryValue}"
+                          </Button>
+                        </CommandEmpty>
                         <CommandGroup>
                           {possibleCategories.map((category) => (
                             <CommandItem
                               value={category.label}
                               key={category.value}
                               onSelect={() => {
-                                form.setValue("category", category.value);
+                                form.setValue("category", category.value, {
+                                  shouldValidate: true,
+                                });
                                 setCategoryOpen(false);
                               }}
                             >
@@ -225,6 +271,7 @@ export default function AddNewTransactionForm({
                     </Command>
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
               </FormItem>
             );
           }}
