@@ -27,13 +27,18 @@ export default function AddNewTransactionDialog({
           <DialogDescription>
             Insira os dados da sua transação.
           </DialogDescription>
-          <AddNewTransactionForm className="py-4" />
+          <AddNewTransactionForm
+            className="py-4"
+            formId="add-transaction-form"
+          />
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancelar</Button>
           </DialogClose>
-          <Button type="submit">Adicionar</Button>
+          <Button type="submit" form="add-transaction-form">
+            Adicionar
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

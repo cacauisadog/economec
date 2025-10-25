@@ -77,8 +77,10 @@ function centsToDecimal(cents: number): string {
 
 export default function AddNewTransactionForm({
   className,
+  formId,
 }: {
   className?: string;
+  formId: string;
 }) {
   const [displayValue, setDisplayValue] = useState("R$ 0,00");
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -121,6 +123,7 @@ export default function AddNewTransactionForm({
   return (
     <Form {...form}>
       <form
+        id={formId}
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn("space-y-6", className)}
       >
@@ -276,7 +279,6 @@ export default function AddNewTransactionForm({
             );
           }}
         />
-        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
