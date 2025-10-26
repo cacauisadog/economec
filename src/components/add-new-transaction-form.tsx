@@ -8,15 +8,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -27,7 +24,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Plus } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
 const categories = [
@@ -121,98 +118,108 @@ export default function AddNewTransactionForm({
   }
 
   return (
-    <Form {...form}>
-      <form
-        id={formId}
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("space-y-6", className)}
-      >
-        <FormField
-          control={form.control}
+    <form
+      id={formId}
+      onSubmit={form.handleSubmit(onSubmit)}
+      className={cn("space-y-6", className)}
+    >
+      <FieldGroup>
+        <Controller
           name="type"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="expense" id="expense" />
-                    <Label htmlFor="expense">Despesa</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="income" id="income" />
-                    <Label htmlFor="income">Recebimento</Label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <RadioGroup
+                name={field.name}
+                value={field.value}
+                onValueChange={field.onChange}
+                className="flex gap-4"
+                aria-invalid={fieldState.invalid}
+              >
+                <Field orientation="horizontal">
+                  <RadioGroupItem value="expense" id="expense" />
+                  <FieldLabel htmlFor="expense" className="font-normal">
+                    Despesa
+                  </FieldLabel>
+                </Field>
+                <Field orientation="horizontal">
+                  <RadioGroupItem value="income" id="income" />
+                  <FieldLabel htmlFor="income" className="font-normal">
+                    Recebimento
+                  </FieldLabel>
+                </Field>
+              </RadioGroup>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
-        <FormField
-          control={form.control}
+
+        <Controller
           name="value"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Valor</FormLabel>
-              <FormControl>
-                <Input
-                  type="tel"
-                  value={displayValue}
-                  maxLength={15}
-                  onChange={(e) => {
-                    const cents = parseInputToCents(e.target.value);
-                    const formatted = formatCurrency(cents);
-                    setDisplayValue(formatted);
-                    field.onChange(centsToDecimal(cents));
-                  }}
-                  onBlur={field.onBlur}
-                  name={field.name}
-                  ref={field.ref}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="value">Valor</FieldLabel>
+              <Input
+                id="value"
+                type="tel"
+                value={displayValue}
+                maxLength={15}
+                onChange={(e) => {
+                  const cents = parseInputToCents(e.target.value);
+                  const formatted = formatCurrency(cents);
+                  setDisplayValue(formatted);
+                  field.onChange(centsToDecimal(cents));
+                }}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
-        <FormField
-          control={form.control}
+
+        <Controller
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descrição</FormLabel>
-              <FormControl>
-                <Input placeholder="Ex.: almoço no MacDonald's" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="description">Descrição</FieldLabel>
+              <Input
+                {...field}
+                id="description"
+                placeholder="Ex.: almoço no MacDonald's"
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
-        <FormField
-          control={form.control}
+
+        <Controller
           name="category"
-          render={({ field }) => {
+          control={form.control}
+          render={({ field, fieldState }) => {
             const selectedCategory = possibleCategories.find(
               (category) => category.value === field.value,
             );
 
             return (
-              <FormItem>
-                <FormLabel>Categoria</FormLabel>
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="category">Categoria</FieldLabel>
                 <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
                   <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={categoryOpen}
-                      >
-                        {selectedCategory?.label || "Selecione uma categoria"}
-                      </Button>
-                    </FormControl>
+                    <Button
+                      id="category"
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={categoryOpen}
+                      aria-invalid={fieldState.invalid}
+                    >
+                      {selectedCategory?.label || "Selecione uma categoria"}
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent portal={false} className="w-full p-0">
                     <Command className="w-full">
@@ -274,12 +281,14 @@ export default function AddNewTransactionForm({
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
-              </FormItem>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             );
           }}
         />
-      </form>
-    </Form>
+      </FieldGroup>
+    </form>
   );
 }
