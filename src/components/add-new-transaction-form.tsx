@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/command";
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -20,6 +21,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Plus } from "lucide-react";
@@ -32,6 +41,19 @@ const categories = [
   { value: "supermercado", label: "supermercado" },
   { value: "delivery", label: "delivery" },
   { value: "carro", label: "carro" },
+];
+
+const sources = [
+  {
+    label: "conta corrente nubank",
+    value: "conta corrente nubank",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito nubank",
+    value: "cartão de crédito nubank",
+    type: "liability",
+  },
 ];
 
 const formSchema = z.object({
@@ -50,6 +72,10 @@ const formSchema = z.object({
     .min(3, { message: "Pelo menos 3" })
     .max(512, { message: "Máx 512 chars" }),
   category: z.string().min(1, { message: "Selecione uma categoria" }),
+  source: z
+    .string()
+    .min(1, { message: "Selecione uma origem" })
+    .refine((val) => val !== "escolha", { message: "Selecione uma origem" }),
 });
 
 // Format cents value to currency display (e.g., 560 -> "R$ 5,60")
@@ -83,6 +109,7 @@ export default function AddNewTransactionForm({
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [possibleCategories, setPossibleCategories] = useState(categories);
   const [categoryValue, setCategoryValue] = useState("");
+  const [possibleSources, setPossibleSources] = useState(sources);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,6 +118,7 @@ export default function AddNewTransactionForm({
       value: "0.00",
       description: "",
       category: "",
+      source: "",
     },
   });
 
@@ -287,6 +315,36 @@ export default function AddNewTransactionForm({
               </Field>
             );
           }}
+        />
+        <Controller
+          name="source"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field orientation="responsive" data-invalid={fieldState.invalid}>
+              <FieldContent>
+                <FieldLabel htmlFor="source">Origem</FieldLabel>
+              </FieldContent>
+              <Select
+                name={field.name}
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger id="source" aria-invalid={fieldState.invalid}>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent position="item-aligned">
+                  <SelectItem value="escolha">Escolha da lista</SelectItem>
+                  <SelectSeparator />
+                  {sources.map((source) => (
+                    <SelectItem key={source.value} value={source.value}>
+                      {source.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
         />
       </FieldGroup>
     </form>

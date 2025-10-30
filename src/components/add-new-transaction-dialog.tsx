@@ -25,7 +25,7 @@ export default function AddNewTransactionDialog({
         <DialogHeader>
           <DialogTitle>Nova transação</DialogTitle>
           <DialogDescription>
-            Insira os dados da sua transação.
+            Insira os dados da sua transação
           </DialogDescription>
           <AddNewTransactionForm
             className="py-4"
