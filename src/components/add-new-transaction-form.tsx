@@ -237,7 +237,11 @@ export default function AddNewTransactionForm({
             return (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="category">Categoria</FieldLabel>
-                <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                <Popover
+                  open={categoryOpen}
+                  onOpenChange={setCategoryOpen}
+                  modal={false}
+                >
                   <PopoverTrigger asChild>
                     <Button
                       id="category"
@@ -245,11 +249,16 @@ export default function AddNewTransactionForm({
                       role="combobox"
                       aria-expanded={categoryOpen}
                       aria-invalid={fieldState.invalid}
+                      className="w-full justify-between"
                     >
                       {selectedCategory?.label || "Selecione uma categoria"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent portal={false} className="w-full p-0">
+                  <PopoverContent
+                    align="start"
+                    className="pointer-events-auto p-0"
+                    style={{ width: "var(--radix-popover-trigger-width)" }}
+                  >
                     <Command className="w-full">
                       <CommandInput
                         placeholder="Digite algo"
@@ -287,6 +296,13 @@ export default function AddNewTransactionForm({
                               value={category.label}
                               key={category.value}
                               onSelect={() => {
+                                form.setValue("category", category.value, {
+                                  shouldValidate: true,
+                                });
+                                setCategoryOpen(false);
+                              }}
+                              onPointerDown={(e) => {
+                                e.preventDefault();
                                 form.setValue("category", category.value, {
                                   shouldValidate: true,
                                 });
