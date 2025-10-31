@@ -1,12 +1,4 @@
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Creatable, type CreatableOption } from "@/components/ui/creatable";
 import {
   Field,
   FieldContent,
@@ -15,11 +7,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -31,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Plus } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -106,10 +92,8 @@ export default function AddNewTransactionForm({
   formId: string;
 }) {
   const [displayValue, setDisplayValue] = useState("R$ 0,00");
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const [possibleCategories, setPossibleCategories] = useState(categories);
-  const [categoryValue, setCategoryValue] = useState("");
-  const [possibleSources, setPossibleSources] = useState(sources);
+  const [possibleCategories, setPossibleCategories] =
+    useState<CreatableOption[]>(categories);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -131,18 +115,6 @@ export default function AddNewTransactionForm({
       ...values,
       value: finalValue,
     });
-  }
-
-  function addNewCategory() {
-    const newCategory = {
-      value: categoryValue,
-      label: categoryValue,
-    };
-    setPossibleCategories((prev) => [...prev, newCategory]);
-    form.setValue("category", categoryValue, {
-      shouldValidate: true,
-    });
-    setCategoryOpen(false);
   }
 
   return (
@@ -229,108 +201,25 @@ export default function AddNewTransactionForm({
         <Controller
           name="category"
           control={form.control}
-          render={({ field, fieldState }) => {
-            const selectedCategory = possibleCategories.find(
-              (category) => category.value === field.value,
-            );
-
-            return (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="category">Categoria</FieldLabel>
-                <Popover
-                  open={categoryOpen}
-                  onOpenChange={setCategoryOpen}
-                  modal={false}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="category"
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={categoryOpen}
-                      aria-invalid={fieldState.invalid}
-                      className="w-full justify-between"
-                    >
-                      {selectedCategory?.label || "Selecione uma categoria"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    align="start"
-                    className="pointer-events-auto p-0"
-                    style={{ width: "var(--radix-popover-trigger-width)" }}
-                  >
-                    <Command className="w-full">
-                      <CommandInput
-                        placeholder="Digite algo"
-                        value={categoryValue}
-                        onValueChange={setCategoryValue}
-                        maxLength={24}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            const hasMatch = possibleCategories.some((cat) =>
-                              cat.label
-                                .toLowerCase()
-                                .includes(categoryValue.toLowerCase()),
-                            );
-                            if (!hasMatch && categoryValue.trim()) {
-                              e.preventDefault();
-                              addNewCategory();
-                            }
-                          }
-                        }}
-                      />
-                      <CommandList>
-                        <CommandEmpty className="w-full p-4">
-                          <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={addNewCategory}
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Adicionar "{categoryValue}"
-                          </Button>
-                        </CommandEmpty>
-                        <CommandGroup>
-                          {possibleCategories.map((category) => (
-                            <CommandItem
-                              value={category.label}
-                              key={category.value}
-                              onSelect={() => {
-                                form.setValue("category", category.value, {
-                                  shouldValidate: true,
-                                });
-                                setCategoryOpen(false);
-                              }}
-                              onPointerDown={(e) => {
-                                e.preventDefault();
-                                form.setValue("category", category.value, {
-                                  shouldValidate: true,
-                                });
-                                setCategoryOpen(false);
-                              }}
-                            >
-                              {category.label}
-                              <Check
-                                className={cn(
-                                  "ml-auto h-4 w-4",
-                                  category.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            );
-          }}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="category">Categoria</FieldLabel>
+              <Creatable
+                id="category"
+                value={field.value}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
+                options={possibleCategories}
+                onCreateOption={(newOption) => {
+                  setPossibleCategories((prev) => [...prev, newOption]);
+                }}
+                placeholder="Selecione uma categoria"
+                invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
         />
         <Controller
           name="source"
