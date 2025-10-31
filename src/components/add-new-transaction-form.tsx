@@ -1,7 +1,6 @@
 import { Creatable, type CreatableOption } from "@/components/ui/creatable";
 import {
   Field,
-  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -225,10 +224,8 @@ export default function AddNewTransactionForm({
           name="source"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field orientation="responsive" data-invalid={fieldState.invalid}>
-              <FieldContent>
-                <FieldLabel htmlFor="source">Origem</FieldLabel>
-              </FieldContent>
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="source">Origem</FieldLabel>
               <Select
                 name={field.name}
                 value={field.value}
