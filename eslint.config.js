@@ -42,6 +42,14 @@ export default tseslint.config(
     },
   },
 
+  // Disable react-refresh rule for UI components
+  {
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
+
   // Prettier config (must be last)
   eslintConfigPrettier,
 );
