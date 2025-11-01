@@ -354,7 +354,7 @@ export default function AddNewTransactionForm({
                 <SelectTrigger id="source" aria-invalid={fieldState.invalid}>
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent position="item-aligned">
+                <SelectContent className="max-h-[200px]">
                   <SelectItem value="escolha">Escolha da lista</SelectItem>
                   <SelectSeparator />
                   {sources.map((source) => (
