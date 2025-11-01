@@ -26,6 +26,26 @@ const categories = [
   { value: "supermercado", label: "supermercado" },
   { value: "delivery", label: "delivery" },
   { value: "carro", label: "carro" },
+  { value: "transporte", label: "transporte" },
+  { value: "saúde", label: "saúde" },
+  { value: "educação", label: "educação" },
+  { value: "lazer", label: "lazer" },
+  { value: "moradia", label: "moradia" },
+  { value: "vestuário", label: "vestuário" },
+  { value: "academia", label: "academia" },
+  { value: "streaming", label: "streaming" },
+  { value: "telefone", label: "telefone" },
+  { value: "internet", label: "internet" },
+  { value: "água", label: "água" },
+  { value: "luz", label: "luz" },
+  { value: "gás", label: "gás" },
+  { value: "farmácia", label: "farmácia" },
+  { value: "pet", label: "pet" },
+  { value: "viagem", label: "viagem" },
+  { value: "presente", label: "presente" },
+  { value: "eletrônicos", label: "eletrônicos" },
+  { value: "manutenção", label: "manutenção" },
+  { value: "investimento", label: "investimento" },
 ];
 
 const sources = [
@@ -38,6 +58,106 @@ const sources = [
     label: "cartão de crédito nubank",
     value: "cartão de crédito nubank",
     type: "liability",
+  },
+  {
+    label: "conta corrente inter",
+    value: "conta corrente inter",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito inter",
+    value: "cartão de crédito inter",
+    type: "liability",
+  },
+  {
+    label: "conta corrente itaú",
+    value: "conta corrente itaú",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito itaú",
+    value: "cartão de crédito itaú",
+    type: "liability",
+  },
+  {
+    label: "conta corrente bradesco",
+    value: "conta corrente bradesco",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito bradesco",
+    value: "cartão de crédito bradesco",
+    type: "liability",
+  },
+  {
+    label: "conta poupança",
+    value: "conta poupança",
+    type: "asset",
+  },
+  {
+    label: "dinheiro físico",
+    value: "dinheiro físico",
+    type: "asset",
+  },
+  {
+    label: "picpay",
+    value: "picpay",
+    type: "asset",
+  },
+  {
+    label: "mercado pago",
+    value: "mercado pago",
+    type: "asset",
+  },
+  {
+    label: "paypal",
+    value: "paypal",
+    type: "asset",
+  },
+  {
+    label: "conta corrente santander",
+    value: "conta corrente santander",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito santander",
+    value: "cartão de crédito santander",
+    type: "liability",
+  },
+  {
+    label: "conta corrente c6",
+    value: "conta corrente c6",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito c6",
+    value: "cartão de crédito c6",
+    type: "liability",
+  },
+  {
+    label: "conta corrente next",
+    value: "conta corrente next",
+    type: "asset",
+  },
+  {
+    label: "cartão de crédito next",
+    value: "cartão de crédito next",
+    type: "liability",
+  },
+  {
+    label: "conta investimento",
+    value: "conta investimento",
+    type: "asset",
+  },
+  {
+    label: "vale alimentação",
+    value: "vale alimentação",
+    type: "asset",
+  },
+  {
+    label: "vale refeição",
+    value: "vale refeição",
+    type: "asset",
   },
 ];
 
