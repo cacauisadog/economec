@@ -125,7 +125,7 @@ export function Creatable({
   );
 
   return (
-    <Popover open={open} onOpenChange={handleOpenChange} modal={false}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           id={id}
@@ -171,10 +171,6 @@ export function Creatable({
                   value={option.label}
                   key={option.value}
                   onSelect={() => handleSelectOption(option.value)}
-                  onPointerDown={(e) => {
-                    e.preventDefault();
-                    handleSelectOption(option.value);
-                  }}
                 >
                   {option.label}
                   <Check
