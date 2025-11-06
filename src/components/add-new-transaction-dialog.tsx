@@ -20,7 +20,7 @@ export default function AddNewTransactionDialog({
   onOpenChange,
 }: AddNewTransactionDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="h-[calc(100dvh)] min-w-full border-0 sm:h-[600px] sm:min-w-[425px]"
         onPointerDownOutside={(e) => e.preventDefault()}
