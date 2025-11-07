@@ -1,4 +1,5 @@
 import { Creatable, type CreatableOption } from "@/components/ui/creatable";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Field,
   FieldError,
@@ -163,6 +164,7 @@ const sources = [
 
 const formSchema = z.object({
   type: z.enum(["expense", "income"]),
+  date: z.date(),
   value: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "Formato inválido")
@@ -218,6 +220,7 @@ export default function AddNewTransactionForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       type: "expense",
+      date: new Date(),
       value: "0.00",
       description: "",
       category: "",
@@ -277,6 +280,24 @@ export default function AddNewTransactionForm({
                   </FieldLabel>
                 </Field>
               </RadioGroup>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="date"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="date">Data da transação</FieldLabel>
+              <DatePicker
+                id="date"
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                invalid={fieldState.invalid}
+              />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
