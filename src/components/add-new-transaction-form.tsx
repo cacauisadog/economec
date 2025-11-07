@@ -239,7 +239,15 @@ export default function AddNewTransactionForm({
   return (
     <form
       id={formId}
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit, (errors) => {
+        // Focus first invalid field
+        const firstError = Object.keys(errors)[0] as keyof z.infer<
+          typeof formSchema
+        >;
+        if (firstError) {
+          form.setFocus(firstError);
+        }
+      })}
       className={cn("space-y-6", className)}
     >
       <FieldGroup>
