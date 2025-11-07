@@ -14,7 +14,6 @@ function Index() {
   }
   return (
     <div>
-      <h1>oi</h1>
       <Button onClick={openAddTransactionDialog}>Adicionar transação</Button>
       <AddNewTransactionDialog
         open={isDialogOpen}
