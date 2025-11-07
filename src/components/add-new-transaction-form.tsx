@@ -248,6 +248,7 @@ export default function AddNewTransactionForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
+              <FieldLabel>Tipo de transação</FieldLabel>
               <RadioGroup
                 name={field.name}
                 value={field.value}
