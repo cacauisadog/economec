@@ -351,7 +351,13 @@ export default function AddNewTransactionForm({
                 value={field.value}
                 onValueChange={field.onChange}
               >
-                <SelectTrigger id="source" aria-invalid={fieldState.invalid}>
+                <SelectTrigger
+                  id="source"
+                  aria-invalid={fieldState.invalid}
+                  aria-describedby={
+                    fieldState.invalid ? "source-error" : undefined
+                  }
+                >
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent className="max-h-[200px]">
@@ -364,7 +370,9 @@ export default function AddNewTransactionForm({
                   ))}
                 </SelectContent>
               </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.invalid && (
+                <FieldError id="source-error" errors={[fieldState.error]} />
+              )}
             </Field>
           )}
         />
