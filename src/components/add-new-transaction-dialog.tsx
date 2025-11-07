@@ -22,7 +22,7 @@ export default function AddNewTransactionDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="h-[calc(100dvh)] min-w-full border-0 sm:h-[600px] sm:min-w-[425px]"
+        className="top-0 left-0 h-[calc(100dvh)] w-full max-w-full translate-x-0 translate-y-0 rounded-none border-0 p-6 sm:top-[50%] sm:left-[50%] sm:h-auto sm:max-w-[425px] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-lg sm:border"
         onPointerDownOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
@@ -30,11 +30,11 @@ export default function AddNewTransactionDialog({
           <DialogDescription>
             Insira os dados da sua transação
           </DialogDescription>
-          <AddNewTransactionForm
-            className="py-4"
-            formId="add-transaction-form"
-          />
         </DialogHeader>
+        <AddNewTransactionForm
+          className="flex-1 overflow-y-auto py-4"
+          formId="add-transaction-form"
+        />
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancelar</Button>
