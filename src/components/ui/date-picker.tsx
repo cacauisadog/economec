@@ -1,3 +1,4 @@
+import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import * as React from "react";
 
@@ -99,6 +100,7 @@ export function DatePicker({
             onSelect={handleSelectDate}
             disabled={false}
             endMonth={new Date(2035, 11)}
+            locale={ptBR}
           />
           <div className="border-t p-3">
             <Button
