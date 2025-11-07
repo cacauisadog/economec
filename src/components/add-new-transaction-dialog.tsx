@@ -23,7 +23,7 @@ export default function AddNewTransactionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="top-0 left-0 h-[calc(100dvh)] w-full max-w-full translate-x-0 translate-y-0 rounded-none border-0 p-6 sm:top-[50%] sm:left-[50%] sm:h-auto sm:max-w-[425px] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-lg sm:border"
-        onPointerDownOutside={(e) => e.preventDefault()}
+        disableOutsideDismiss
       >
         <DialogHeader>
           <DialogTitle>Nova transação</DialogTitle>
