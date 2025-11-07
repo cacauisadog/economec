@@ -294,8 +294,14 @@ export default function AddNewTransactionForm({
                 name={field.name}
                 ref={field.ref}
                 aria-invalid={fieldState.invalid}
+                aria-label="Valor em reais. Digite apenas números, a formatação será aplicada automaticamente"
+                aria-describedby={
+                  fieldState.invalid ? "value-error" : undefined
+                }
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.invalid && (
+                <FieldError id="value-error" errors={[fieldState.error]} />
+              )}
             </Field>
           )}
         />
