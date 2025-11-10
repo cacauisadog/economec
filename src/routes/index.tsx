@@ -1,4 +1,5 @@
 import AddNewTransactionDialog from "@/components/add-new-transaction-dialog";
+import TransactionDataTable from "@/components/transaction-data-table";
 import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -19,6 +20,7 @@ function Index() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
       />
+      <TransactionDataTable />
     </div>
   );
 }
